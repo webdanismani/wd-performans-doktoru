@@ -1,0 +1,35 @@
+name: Sürüm / Release
+
+# v1.0.1 gibi bir etiket gönderildiğinde eklenti ZIP'ini oluşturup sürüme ekler.
+# Builds the plugin ZIP and attaches it to the release when a tag like v1.0.1 is pushed.
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+
+      - name: PHP sözdizimi kontrolü / PHP lint
+        run: find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
+
+      - name: ZIP oluştur / Build ZIP
+        run: |
+          mkdir -p build/wd-performans-doktoru
+          git archive HEAD | tar -x -C build/wd-performans-doktoru
+          cd build && zip -rq wd-performans-doktoru.zip wd-performans-doktoru
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: build/wd-performans-doktoru.zip
+          generate_release_notes: true

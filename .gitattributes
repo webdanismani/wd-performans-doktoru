@@ -1,0 +1,10 @@
+# Satır sonları / Line endings
+* text=auto eol=lf
+*.png binary
+
+# Sürüm ZIP'ine girmeyecek dosyalar / Excluded from the release ZIP
+/.github         export-ignore
+/.gitattributes  export-ignore
+/.gitignore      export-ignore
+/README.md       export-ignore
+/CHANGELOG.md    export-ignore
